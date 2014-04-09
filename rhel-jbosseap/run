@@ -1,0 +1,3 @@
+#!/bin/bash 
+
+/opt/jboss-eap-6.2/bin/launch standalone -c standalone-ha.xml -b 0.0.0.0 $@
