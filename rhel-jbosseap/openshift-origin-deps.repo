@@ -1,0 +1,5 @@
+[openshift-origin-deps]
+name=openshift-origin-deps
+baseurl=http://mirror.openshift.com/pub/origin-server/release/3/rhel-6/dependencies/x86_64/
+gpgcheck=0
+enabled=1

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo -n "Saving build artifacts..."
+cd /
+tar czf /tmp/artifacts/maven.tar.gz opt/jboss-eap-6.2/.m2
+echo "...done"
+

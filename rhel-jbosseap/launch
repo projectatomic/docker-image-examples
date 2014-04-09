@@ -1,0 +1,80 @@
+#!/bin/bash
+
+grep jbosseap /etc/passwd
+ls -l /opt/jboss-eap-6.2/standalone
+ls -l /opt/jboss-eap-6.2/standalone/configuration
+ls -l /opt/jboss-eap-6.2/standalone/configuration/application-users.properties
+
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <configuration> [options]"
+  echo
+  echo "Launches JBoss EAP in the selected configuration with specified options (if any)"
+  echo
+  echo "<configuration>  - standalone or domain"
+  echo "[options]        - options accepted by the standalone/domain.sh scripts"
+  echo
+  echo "Examples:"
+  echo
+  echo "*  To run JBoss EAP in standalone mode with default options:"
+  echo
+  echo "   $0 standalone"
+  echo
+  echo "*  To run JBoss EAP in standalone mode with custom options:"
+  echo
+  echo "   $0 standalone -b 0.0.0.0"
+  exit 1
+fi
+
+JBOSS_HOME=/opt/jboss-eap-6.2
+JBOSS_BIN_DIR=${JBOSS_HOME}/bin
+JBOSS_CLI=$JBOSS_BIN_DIR/jboss-cli.sh
+
+function deploy() {
+  echo "Deploying artifact $1..."
+
+  `$JBOSS_CLI -c "deploy $1" 2>&1 || :`
+  if [ $? -eq 0 ]; then
+    echo "Artifact $1 deployed"
+    return 0
+  fi
+
+  echo "Failed to deploy artifact $1"
+  return 1
+}
+
+function wait_for_server() {
+  until `$JBOSS_CLI -c "ls /deployment" &> /dev/null`; do
+    sleep 1
+  done
+}
+
+function deploy_all_wars() {
+  artifact_dir=/opt/jboss-eap-6.2/artifacts
+
+  if [ ! -d "$artifact_dir" ]; then
+    return 1
+  fi
+
+  wait_for_server
+
+  for f in $artifact_dir/*.war
+  do
+    deploy $f
+  done
+}
+
+if [ "$1" = "standalone" ] || [ "$1" = "domain" ]; then
+  CONFIGURATION=$1
+else
+  echo "Only domain and standalone configuration are valid, you provided '$1'. Aborting."
+  exit 1
+fi
+
+# Run the deployment in the background
+deploy_all_wars &
+
+shift 1
+
+exec $JBOSS_HOME/bin/${CONFIGURATION}.sh $@
+
