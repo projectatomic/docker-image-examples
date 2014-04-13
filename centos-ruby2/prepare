@@ -1,0 +1,20 @@
+#!/bin/bash
+
+PATH=/opt/rbenv/bin:/opt/ruby/bin:$PATH
+eval "$(rbenv init -)"
+
+set -e
+
+if [ -e /tmp/artifacts/gems.tgz ]; then
+  echo -n "Restoring build artifacts.."
+  pushd /;
+  tar zxf /tmp/artifacts/gems.tgz;
+  popd;
+  echo "..done"
+fi
+
+echo "Building your app"
+mkdir -p /opt/ruby/src/
+cd /opt/ruby/src/
+cp -Rf /tmp/src/* .
+GEM_HOME=/opt/ruby bundle install --path /opt/ruby/bundle/
