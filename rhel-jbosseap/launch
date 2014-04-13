@@ -1,11 +1,5 @@
 #!/bin/bash
 
-grep jbosseap /etc/passwd
-ls -l /opt/jboss-eap-6.2/standalone
-ls -l /opt/jboss-eap-6.2/standalone/configuration
-ls -l /opt/jboss-eap-6.2/standalone/configuration/application-users.properties
-
-
 if [ $# -lt 1 ]; then
   echo "Usage: $0 <configuration> [options]"
   echo
