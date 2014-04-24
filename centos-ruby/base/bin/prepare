@@ -6,11 +6,10 @@ bundle_dir="/opt/ruby/bundle"
 BUNDLE_WITHOUT="development:test"
 
 if [ -e /tmp/artifacts/gems.tgz ]; then
-  echo -n "Restoring build artifacts.."
+  echo -n "Restoring build artifacts"
   pushd / >/dev/null
   tar zxf /tmp/artifacts/gems.tgz
   popd >/dev/null
-  echo "..done"
 fi
 
 echo "Building your Ruby application"
