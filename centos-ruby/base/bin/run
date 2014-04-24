@@ -1,0 +1,22 @@
+#!/bin/bash
+
+app_src_dir="/opt/ruby/src"
+
+function has_puma() {
+  (grep ' puma ' Gemfile.lock >/dev/null) && return 0
+  return 1
+}
+
+# We are not using the 'bundle exec' here because in that case
+# the 'puma' will have to be part of the Gemfile
+#
+pushd $app_src_dir >/dev/null
+
+if has_puma; then
+  puma_cfg="/opt/ruby/conf/puma.cfg"
+  /usr/bin/ruby_context "bundle exec puma --config $puma_cfg"
+else
+  /usr/bin/ruby_context "bundle exec rackup -s 0.0.0.0 -p 8000 -E production"
+fi
+
+popd >/dev/null
