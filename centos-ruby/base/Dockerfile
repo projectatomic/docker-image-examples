@@ -23,16 +23,9 @@ ADD ./bin /usr/bin/
 ADD ./conf /opt/ruby/conf/
 RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts}
 
-# This build image use Puma[1] web server to run any Rack based Ruby application
-# [1] http://puma.io
-#
-# TODO: Provide an CentOS/SCL RPM for puma webserver
-#
-#RUN /usr/bin/ruby_context "gem install puma --version 2.8.2 \${GEM_INSTALL_OPTS}" && \
-#    /usr/bin/ruby_context "gem install rack --version 1.5.2 \${GEM_INSTALL_OPTS}"
-#
-# FIXME: Having user here will cause container fail to start when using with STI
-# build.
+# FIXME: This might be a potential bug in STI where if we keep the USER
+# instruction here, the resulting application image will fail to run.
 #
 # USER ruby
-EXPOSE 8000
+
+EXPOSE 9292

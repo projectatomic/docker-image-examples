@@ -16,7 +16,7 @@ if has_puma; then
   puma_cfg="/opt/ruby/conf/puma.cfg"
   /usr/bin/ruby_context "bundle exec puma --config $puma_cfg"
 else
-  /usr/bin/ruby_context "bundle exec rackup -s 0.0.0.0 -p 8000 -E production"
+  /usr/bin/ruby_context "bundle exec rackup -s 0.0.0.0 -p 9292 -E production"
 fi
 
 popd >/dev/null
