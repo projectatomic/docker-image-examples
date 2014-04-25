@@ -1,22 +1,23 @@
 #!/bin/bash
 
-app_src_dir="/opt/ruby/src"
+cd /opt/ruby/src
 
-function has_puma() {
-  (grep ' puma ' Gemfile.lock >/dev/null) && return 0
-  return 1
+# Puma web server is available when using the 'extended' layer,
+# as it is not packaged as RPM and it needs to be installed as
+# gem.
+#
+function is_puma_installed() {
+  ! (grep ' puma ' Gemfile.lock >/dev/null) && return 1;
 }
 
-# We are not using the 'bundle exec' here because in that case
-# the 'puma' will have to be part of the Gemfile
+# Choose the best application server to use. If users have 'puma' in the
+# Gemfile, then start the Ruby application using puma.
 #
-pushd $app_src_dir >/dev/null
-
-if has_puma; then
+# Otherwise fallback to 'rackup'
+#
+if is_puma_installed; then
   puma_cfg="/opt/ruby/conf/puma.cfg"
-  /usr/bin/ruby_context "bundle exec puma --config $puma_cfg"
+  /usr/bin/ruby_context "bundle exec 'puma --config $puma_cfg'"
 else
-  /usr/bin/ruby_context "bundle exec rackup -s 0.0.0.0 -p 9292 -E production"
+  /usr/bin/ruby_context "bundle exec 'rackup'"
 fi
-
-popd >/dev/null
