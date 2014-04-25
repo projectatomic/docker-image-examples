@@ -1,8 +1,13 @@
-# This is a base 'centos-ruby' image which provides basic
-# support for ruby193 applications
+# centos-ruby
+#
+# This image provide a base for running Ruby based applications. It provides
+# just base Ruby installation using SCL and Ruby application server.
+#
+# If you want to use Bundler with C-extensioned gems or MySQL/PostGresql, you
+# can use 'centos-ruby-extended' image instead.
 #
 
-FROM       centos:latest
+FROM       centos
 MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
 # Pull in important updates and then install ruby193 SCL
