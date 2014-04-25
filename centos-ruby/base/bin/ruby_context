@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export GEM_HOME=/opt/ruby/gems
+export RUBY_BIN_DIR="/opt/rh/ruby193/root/usr/bin"
+export GEM_INSTALL_OPTS="--no-ri --no-rdoc --bindir ${RUBY_BIN_DIR}"
+
+# You can reference environment variables in Dockerfile RUN
+# command and they will be substituted here
+#
+/usr/bin/scl enable ruby193 "$(echo -n "$@" | envsubst)"
