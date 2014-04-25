@@ -1,10 +1,10 @@
-# centos-ruby:extended
+# centos-ruby-extended
 #
-# Extended 'centos-ruby' image which allows developers to compile
-# C extensioned rubygems and provide header files.
+# This image provide additional resource for Ruby developers such as additional
+# development files and libraries.
 #
 
-FROM mfojtik/centos-ruby:base
+FROM openshift/centos-ruby
 MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
 RUN yum install --assumeyes gcc automake autoconf curl-devel openssl-devel \
