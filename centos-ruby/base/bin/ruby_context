@@ -1,10 +1,24 @@
 #!/bin/sh
 
+source /opt/ruby/conf/sdk
+
 export GEM_HOME=/opt/ruby/gems
+export GEMRC=/opt/ruby/conf/gemrc
+
 export RUBY_BIN_DIR="/opt/rh/ruby193/root/usr/bin"
-export GEM_INSTALL_OPTS="--no-ri --no-rdoc --bindir ${RUBY_BIN_DIR}"
+export GEM_INSTALL_OPTS="--bindir ${RUBY_BIN_DIR}"
+
+# If NodeJS is installed in system, then enable it to allow Rails
+# assets to compile successfully
+#
+
+scl_cmd="/usr/bin/scl enable ruby193"
+
+if is_nodejs_installed; then
+  scl_cmd="$scl_cmd nodejs010"
+fi
 
 # You can reference environment variables in Dockerfile RUN
 # command and they will be substituted here
 #
-/usr/bin/scl enable ruby193 "$(echo -n "$@" | envsubst)"
+$scl_cmd "$(echo -n "$@" | envsubst)"
