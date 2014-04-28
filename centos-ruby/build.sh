@@ -1,4 +1,4 @@
 #!/bin/bash
 
-(cd base && docker build -t mfojtik/centos-ruby:base .)
-(cd extended && docker build -t mfojtik/centos-ruby:extended .)
+(cd base && docker build -t openshift/centos-ruby .)
+(cd extended && docker build -t openshift/centos-ruby-extended .)
