@@ -1,9 +1,9 @@
 #!/bin/sh
 
-source /opt/ruby/conf/sdk
+source /opt/ruby/etc/sdk
 
 export GEM_HOME=/opt/ruby/gems
-export GEMRC=/opt/ruby/conf/gemrc
+export GEMRC=/opt/ruby/etc/gemrc
 
 export RUBY_BIN_DIR="/opt/rh/ruby193/root/usr/bin"
 export GEM_INSTALL_OPTS="--bindir ${RUBY_BIN_DIR}"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /opt/ruby/conf/sdk
+source /opt/ruby/etc/sdk
 
 cd /opt/ruby/src
 
@@ -10,7 +10,7 @@ cd /opt/ruby/src
 # Otherwise fallback to 'rackup'
 #
 if is_puma_installed; then
-  puma_cfg="/opt/ruby/conf/puma.cfg"
+  puma_cfg="/opt/ruby/etc/puma.cfg"
   /usr/bin/ruby_context "bundle exec 'puma --config $puma_cfg'"
 else
   /usr/bin/ruby_context "bundle exec 'rackup'"

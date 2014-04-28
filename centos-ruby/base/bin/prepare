@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-source /opt/ruby/conf/sdk
+source /opt/ruby/etc/sdk
 
 restore_build_artifacts
 

@@ -25,7 +25,7 @@ RUN mkdir -p /opt/ruby/{gems,run,src} && \
       chown -R ruby:ruby /opt/ruby
 
 ADD ./bin /usr/bin/
-ADD ./conf /opt/ruby/conf/
+ADD ./etc /opt/ruby/etc/
 RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts,usage}
 
 # FIXME: This might be a potential bug in STI where if we keep the USER
