@@ -1,16 +1,12 @@
 #!/bin/sh -e
 
+source /opt/ruby/etc/sdk
+
+restore_build_artifacts
+
 app_src_dir="/opt/ruby/src"
 bundle_dir="/opt/ruby/bundle"
-
 BUNDLE_WITHOUT="development:test"
-
-if [ -e /tmp/artifacts/gems.tgz ]; then
-  echo -n "Restoring build artifacts"
-  pushd / >/dev/null
-  tar zxf /tmp/artifacts/gems.tgz
-  popd >/dev/null
-fi
 
 echo "Building your Ruby application"
 

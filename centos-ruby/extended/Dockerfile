@@ -7,7 +7,15 @@
 FROM openshift/centos-ruby
 MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
-RUN yum install --assumeyes gcc automake autoconf curl-devel openssl-devel \
+# The nodejs010 runtime is needed to make Rails assets compilation possible.
+#
+RUN yum install --enablerepo=openshift-deps-rhel6 --assumeyes \
+      gcc automake autoconf curl-devel openssl-devel \
       zlib-devel libxslt-devel libxml2-devel \
-      mysql-libs mysql-devel \
-      postgresql-devel && yum clean all
+      mysql-libs mysql-devel postgresql-devel sqlite-devel \
+      nodejs010-nodejs && \
+      yum clean all # Clean up yum cache at the end.
+
+# Set RoR 'execjs' runtime to NodeJS v8
+#
+ENV EXECJS_RUNTIME Node
