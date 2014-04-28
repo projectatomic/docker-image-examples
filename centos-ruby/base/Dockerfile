@@ -26,7 +26,7 @@ RUN mkdir -p /opt/ruby/{gems,run,src} && \
 
 ADD ./bin /usr/bin/
 ADD ./conf /opt/ruby/conf/
-RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts}
+RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts,usage}
 
 # FIXME: This might be a potential bug in STI where if we keep the USER
 # instruction here, the resulting application image will fail to run.
@@ -34,3 +34,7 @@ RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts}
 # USER ruby
 
 EXPOSE 9292
+
+# Display STI usage when invoked outside STI builder
+#
+CMD ["/usr/bin/usage"]

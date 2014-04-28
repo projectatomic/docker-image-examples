@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cat <<EOF
+This is a Source To Image (STI) builder image.
+To use it, install STI: https://github.com/openshift/go-sti.
+
+Sample invocation:
+
+sti build git://github.com/mfojtik/sinatra-app-example openshift/centos-ruby-extended sinatra-app
+
+You can then run the resulting image via:
+docker run -p :9292 sinatra-app
+EOF
