@@ -2,7 +2,10 @@
 
 source /opt/ruby/etc/sdk
 
-cd /opt/ruby/src
+app_src_dir="/opt/ruby/src/"
+app_root_dir="${app_src_dir}${APP_ROOT:-.}"
+
+cd $app_root_dir
 
 # Choose the best application server to use. If users have 'puma' in the
 # Gemfile, then start the Ruby application using puma.

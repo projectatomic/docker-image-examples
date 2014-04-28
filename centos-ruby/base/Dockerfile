@@ -28,6 +28,17 @@ ADD ./bin /usr/bin/
 ADD ./etc /opt/ruby/etc/
 RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts,usage}
 
+# Set the 'root' directory where this build will search for Gemfile and
+# config.ru.
+#
+# This can be overridden inside another Dockerfile that uses this image as a base
+# image or in STI via the '-e "APP_ROOT=subdir"' option.
+#
+# Use this in case when your application is contained in a subfolder of your
+# GIT repository. The default value is the root folder.
+#
+ENV APP_ROOT .
+
 # FIXME: This might be a potential bug in STI where if we keep the USER
 # instruction here, the resulting application image will fail to run.
 #
