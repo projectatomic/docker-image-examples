@@ -1,0 +1,36 @@
+# Ruby builder helper functions
+#
+
+# Execute ENTRYPOINT commands using.
+# Note: This command exits after it finishes
+#
+function bundle_exec() {
+  exec /opt/ruby/bin/ruby_context bundle exec "$@"
+}
+
+# FIXME: You can't stop the bundler install for now, using SIGINT or Ctrl-C
+#        because it is not executed using 'exec'. The 'exec' replace the parent
+#        process with itself and so later command are not executed.
+#
+function bundle_install() {
+  BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development:test"}
+  /opt/ruby/bin/ruby_context bundle install $@
+}
+
+function print_usage_and_exit() {
+  echo
+  echo "This image can build your Ruby source code."
+  echo "To build from a git repo, run this in your checked out repo:"
+  echo
+  echo "  docker run -v \$(pwd):/tmp/src openshift/centos-ruby-builder"
+  echo
+  echo "Options:"
+  echo
+  echo "  --debug       Drop to the shell instead of build."
+  echo
+  exit
+}
+
+function is_puma_installed() {
+  grep ' puma ' Gemfile.lock >/dev/null
+}
