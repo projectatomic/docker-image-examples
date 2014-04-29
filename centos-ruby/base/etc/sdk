@@ -14,3 +14,7 @@ function restore_build_artifacts() {
     popd >/dev/null
   fi
 }
+
+function dir_not_empty() {
+  [ -n "$(ls -A "$1" 2>/dev/null)" ]
+}

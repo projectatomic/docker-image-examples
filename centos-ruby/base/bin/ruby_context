@@ -12,13 +12,9 @@ export GEM_INSTALL_OPTS="--bindir ${RUBY_BIN_DIR}"
 # assets to compile successfully
 #
 
-scl_cmd="/usr/bin/scl enable ruby193"
-
-if is_nodejs_installed; then
-  scl_cmd="$scl_cmd nodejs010"
-fi
+collections="ruby193 $(is_nodejs_installed && echo 'nodejs010')"
 
 # You can reference environment variables in Dockerfile RUN
 # command and they will be substituted here
 #
-$scl_cmd "$(echo -n "$@" | envsubst)"
+exec /usr/bin/scl enable ${collections} "$(echo -n "$@" | envsubst)"
