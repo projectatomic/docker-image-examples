@@ -14,7 +14,11 @@ MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 #
 RUN yum update --assumeyes && \
       yum install --assumeyes centos-release-SCL gettext tar which && \
-      yum install --assumeyes ruby193 ruby193-ruby-devel && \
+      yum install --assumeyes ruby193 ruby193-ruby-devel \
+      gcc-c++ automake autoconf curl-devel openssl-devel \
+      zlib-devel libxslt-devel libxml2-devel \
+      mysql-libs mysql-devel postgresql-devel sqlite-devel \
+      nodejs010-nodejs && \
       yum clean all
 
 # Create 'ruby' account we will use to run Ruby application
