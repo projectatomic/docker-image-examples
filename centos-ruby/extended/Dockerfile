@@ -10,7 +10,7 @@ MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 # The nodejs010 runtime is needed to make Rails assets compilation possible.
 #
 RUN yum install --assumeyes \
-      gcc automake autoconf curl-devel openssl-devel \
+      gcc-c++ automake autoconf curl-devel openssl-devel \
       zlib-devel libxslt-devel libxml2-devel \
       mysql-libs mysql-devel postgresql-devel sqlite-devel \
       nodejs010-nodejs && \
