@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "This is a Source To Image (STI) builder image.
-To use it, install STI: https://github.com/openshift/go-sti. 
+To use it, install STI: https://github.com/openshift/docker-source-to-images. 
 
 Sample invocation: 
     sti build git://github.com/pmorie/simple-jbosseap-2  openshift/centos-wildfly-standalone wildflytest
