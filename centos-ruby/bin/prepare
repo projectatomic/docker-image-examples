@@ -1,0 +1,32 @@
+#!/bin/sh -e
+
+source /opt/ruby/etc/sdk
+
+restore_build_artifacts
+
+app_src_dir="/opt/ruby/src/"
+app_root_dir="${app_src_dir}${APP_ROOT:-.}"
+bundle_dir="/opt/ruby/bundle"
+
+echo "Building your Ruby application"
+
+mkdir -p $app_src_dir
+cp -Rf /tmp/src/* ${app_src_dir}/
+
+cd $app_root_dir
+
+if [ -f Gemfile ]; then
+  echo "Installing dependencies using Bundler"
+  ADDTL_BUNDLE_ARGS=""
+  if [ -f Gemfile.lock]; then
+    ADDTL_BUNDLE_ARGS="--deployment"
+  fi
+  if [[ "$RAILS_ENV" == "development" || "$RACK_ENV" == "development" ]]; then
+    BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"test"}
+  elif [[ "$RAILS_ENV" == "test" || "$RACK_ENV" == "test" ]]; then
+    BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development"}
+  else
+    BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development:test"}
+  fi
+  ruby_context "bundle install --path ${bundle_dir} ${ADDTL_BUNDLE_ARGS}"
+fi
