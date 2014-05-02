@@ -18,7 +18,7 @@ cd $app_root_dir
 if [ -f Gemfile ]; then
   echo "Installing dependencies using Bundler"
   ADDTL_BUNDLE_ARGS=""
-  if [ -f Gemfile.lock]; then
+  if [ -f Gemfile.lock ]; then
     ADDTL_BUNDLE_ARGS="--deployment"
   fi
   if [[ "$RAILS_ENV" == "development" || "$RACK_ENV" == "development" ]]; then
