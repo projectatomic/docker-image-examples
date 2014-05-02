@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+source /opt/ruby/etc/sdk
+source /opt/ruby/etc/helpers
+
+# The app_root_dir needs to be exported, so the Puma or other Ruby
+# application server can pick it up and use it as 'application root'
+#
+export app_root_dir="${HOME}/src/${APP_ROOT:-.}"
+
+export RACK_ENV=${RACK_ENV:-"production"}
+export RAILS_ENV=${RAILS_ENV:-"${RACK_ENV}"}
+
+cd $app_root_dir
+
+# Allow users to inspect/debug the builder image itself, by using:
+# $ docker run -i -t openshift/centos-ruby-builder --debug
+#
+[ "$1" == "--debug" ] && exec /bin/bash
+
+if is_puma_installed; then
+  bundle_exec "puma --config ${HOME}/etc/puma.cfg"
+else
+  bundle_exec "rackup -P ${HOME}/run/rack.pid --host 0.0.0.0"
+fi

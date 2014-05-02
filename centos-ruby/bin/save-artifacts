@@ -1,4 +1,0 @@
-#!/bin/sh -e
-
-echo "Saving build-artifacts"
-tar zcf /tmp/artifacts/gems.tgz /opt/ruby/bundle/ruby
