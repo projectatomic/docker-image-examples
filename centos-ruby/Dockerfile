@@ -30,6 +30,13 @@ RUN mkdir -p /opt/ruby/{gems,run,src,bin} && \
 ADD ./bin /opt/ruby/bin/
 ADD ./etc /opt/ruby/etc/
 
+# FIXME: The STI require all scripts in /usr/bin path, this layer is here to
+#        maintain backward compatibility
+#
+RUN cp -f /opt/ruby/bin/prepare /usr/bin/prepare && \
+    cp -f /opt/ruby/bin/run /usr/bin/run && \
+    cp -f /opt/ruby/bin/save-artifacts /usr/bin/save-artifacts
+
 RUN chown -R ruby:ruby /opt/ruby
 
 # Set the 'root' directory where this build will search for Gemfile and
