@@ -30,7 +30,6 @@ RUN mkdir -p /opt/ruby/{gems,run,src} && \
 
 ADD ./bin /usr/bin/
 ADD ./etc /opt/ruby/etc/
-RUN chmod +x /usr/bin/{prepare,run,ruby_context,save-artifacts,usage}
 
 # Set the 'root' directory where this build will search for Gemfile and
 # config.ru.
