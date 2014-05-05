@@ -1,20 +1,33 @@
 function is_puma_installed() {
+  [ ! -f Gemfile.lock ] && return 1
   grep ' puma ' Gemfile.lock >/dev/null
-}
-
-function is_nodejs_installed() {
-  (/usr/bin/scl -l | grep nodejs010) >/dev/null
 }
 
 function restore_build_artifacts() {
   if [ -e /tmp/artifacts/gems.tgz ]; then
-    echo -n "Restoring build artifacts"
+    echo "Restoring build artifacts"
     pushd / >/dev/null
     tar zxf /tmp/artifacts/gems.tgz
     popd >/dev/null
   fi
 }
 
-function dir_not_empty() {
-  [ -n "$(ls -A "$1" 2>/dev/null)" ]
+function dir_is_empty() {
+  [ -z "$(ls -A "$1" 2>/dev/null)" ]
+}
+
+# Execute ENTRYPOINT commands using.
+# Note: This command exits after it finishes
+#
+function bundle_exec() {
+  exec ruby_context bundle exec "$@"
+}
+
+# FIXME: You can't stop the bundler install for now, using SIGINT or Ctrl-C
+#        because it is not executed using 'exec'. The 'exec' replace the parent
+#        process with itself and so later command are not executed.
+#
+function bundle_install() {
+  BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development:test"}
+  ruby_context bundle install $@
 }
