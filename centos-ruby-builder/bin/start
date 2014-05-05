@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+source ${HOME}/etc/sdk
+source ${HOME}/etc/helpers
+
+# Allow users to inspect/debug the builder image itself, by using:
+# $ docker run -i -t openshift/centos-ruby-builder --debug
+#
+[ "$1" == "--debug" ] && exec /bin/bash
+
+# If the /tmp/src is empty, then print usage and exit.
+(dir_is_empty /tmp/src) && print_usage_and_exit
+
+# Build the ruby application first
+#
+${HOME}/bin/prepare
+
+# Replace this script with the application runner at the end of the build.
+#
+echo "---> Build successful. Commit this image with: docker commit ${HOSTNAME} ruby-app"
+cp -f ${HOME}/bin/run ${HOME}/bin/start && exit

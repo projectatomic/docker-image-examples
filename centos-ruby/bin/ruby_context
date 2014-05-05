@@ -2,19 +2,19 @@
 
 source /opt/ruby/etc/sdk
 
-export GEM_HOME=/opt/ruby/gems
-export GEMRC=/opt/ruby/etc/gemrc
+export GEM_HOME=${HOME}/gems
+export GEMRC=${HOME}/etc/gemrc
+export EXECJS_RUNTIME=Node
 
-export RUBY_BIN_DIR="/opt/rh/ruby193/root/usr/bin"
-export GEM_INSTALL_OPTS="--bindir ${RUBY_BIN_DIR}"
+function scl_env() {
+  /usr/bin/scl enable ruby193 nodejs010 "printenv $1"
+}
 
-# If NodeJS is installed in system, then enable it to allow Rails
-# assets to compile successfully
+# FIXME: This is required in order to 'exec' run ruby instead of
+#        'scl' command. This have to be fixed in SCL in (near) future.
 #
+vars=( PATH LD_LIBRARY_PATH PYTHONPATH PKG_CONFIG_PATH )
+for var in "${vars[@]}"; do export ${var}=$(scl_env "${var}"); done
 
-collections="ruby193 $(is_nodejs_installed && echo 'nodejs010')"
-
-# You can reference environment variables in Dockerfile RUN
-# command and they will be substituted here
-#
-exec /usr/bin/scl enable ${collections} "$(echo -n "$@" | envsubst)"
+cmd="$1" && shift
+exec "$cmd" "$@"
