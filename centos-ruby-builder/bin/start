@@ -11,6 +11,13 @@ source ${HOME}/etc/helpers
 # If the /tmp/src is empty, then print usage and exit.
 (dir_is_empty /tmp/src) && print_usage_and_exit
 
+# Detect presence of $stdin and restore the artifacts
+#
+if [ -p /dev/stdin ]; then
+  echo "---> Restoring artifacts from STDIN"
+  cat | /opt/ruby/bin/restore-artifacts
+fi
+
 # Build the ruby application first
 #
 ${HOME}/bin/prepare
