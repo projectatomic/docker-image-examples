@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd $HOME
+
+# List the files and directories you would like to archive.
+#
+exec tar -czf - {bundle,gems}
