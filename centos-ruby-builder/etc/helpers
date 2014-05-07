@@ -3,14 +3,22 @@
 
 function print_usage_and_exit() {
   echo
-  echo "This image can build your Ruby source code."
-  echo "To build from a git repo, run this in your checked out repo:"
+  echo "This is the Ruby/Rails self-contained builder image."
+  echo "You can use this to produce application images:"
   echo
-  echo "  docker run -v \$(pwd):/tmp/src openshift/centos-ruby-builder"
+  echo "  $ docker run -v \$(pwd):/tmp/src openshift/centos-ruby-builder"
   echo
-  echo "Options:"
+  echo "You can also archive artifacts from the current application image:"
+  echo
+  echo "  $ docker run --entrypoint='${HOME}/bin/save-artifacts' ruby-app > archive.tgz"
+  echo
+  echo "And restore the artifacts on the next build:"
+  echo
+  echo "  $ docker run -v \$(pwd):/tmp/src openshift/centos-ruby-builder < archive.tgz"
+  echo
+  echo "Other options:"
   echo
   echo "  --debug       Drop to the shell instead of build."
   echo
-  exit
+  exit 0
 }
