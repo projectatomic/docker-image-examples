@@ -15,7 +15,19 @@ cd $app_root_dir
 # Allow users to inspect/debug the builder image itself, by using:
 # $ docker run -i -t openshift/centos-ruby-builder --debug
 #
-[ "$1" == "--debug" ] && exec /bin/bash
+# Allow rails users to directly attache rails console by using:
+# $ docker run -i -t openshift/centos-ruby-builder --console
+
+case $1 in
+	"--debug") exec /bin/bash;;
+	"--console")
+		if is_rails_app; then
+			exec /opt/ruby/bin/ruby_context bundle exec rails console ${RAILS_ENV}
+		else
+			exec /bin/bash;
+		fi
+		;;
+esac
 
 if is_puma_installed; then
   bundle_exec "puma --config ${HOME}/etc/puma.cfg"
