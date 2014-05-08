@@ -5,8 +5,11 @@ MAINTAINER Derek Carr <decarr@redhat.com>
 # update, install required, clean
 RUN yum -y update && yum install -y httpd php php-devel wget php-pear unzip gcc-c++ && yum clean all
 
-#install mongo drivers
-RUN pecl install mongo && cd /etc && echo "extension=mongo.so" >> /etc/php.d/mongo.ini
+# update pecl channels
+RUN pecl update-channels
+
+# install mongo drivers without Cyrus SASL (MongoDB Enterprise Authentication)
+RUN printf "no\n" | pecl install mongo && cd /etc && echo "extension=mongo.so" >> /etc/php.d/mongo.ini
 
 # install RockMongo
 RUN cd /root && wget -O rockmongo-1.1.5.zip http://rockmongo.com/downloads/go?id=12 && unzip rockmongo-1.1.5.zip -d /var/www/ && rm -R /var/www/html && mv /var/www/rockmongo/ /var/www/html
