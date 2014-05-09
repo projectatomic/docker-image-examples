@@ -18,7 +18,25 @@ function print_usage_and_exit() {
   echo
   echo "Other options:"
   echo
-  echo "  --debug       Drop to the shell instead of build."
+  echo "  -s <URL>  Point builder to remote directory with assemble scripts"
+  echo "  -h        Print this usage"
+  echo "  -d        Drop to the shell instead of build."
   echo
   exit 0
+}
+
+function download_script() {
+  local url="$1"
+  local script_name="$2"
+  if ! curl --silent -L "${url}/${script_name}" > ${HOME}/bin/${script_name}; then
+    echo "Warning: Unable to download '${url}/${script_name}' ($?)"
+  fi
+}
+
+function download_assemble_scripts() {
+  # FIXME: Rename 'prepare' to 'assemble' at some point.
+  download_script "$1" "prepare"
+  download_script "$1" "save-artifacts"
+  download_script "$1" "restore-artifacts"
+  download_script "$1" "run"
 }

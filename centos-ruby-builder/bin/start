@@ -3,10 +3,19 @@
 source ${HOME}/etc/sdk
 source ${HOME}/etc/helpers
 
-# Allow users to inspect/debug the builder image itself, by using:
-# $ docker run -i -t openshift/centos-ruby-builder --debug
-#
-[ "$1" == "--debug" ] && exec /bin/bash
+while getopts “ht:r:p:v” opt; do
+  case $opt in
+    h)
+      print_usage_and_exit
+      ;;
+    s)
+      download_assemble_scripts "${OPTARG}"
+      ;;
+    d)
+      exec /bin/bash
+      ;;
+  esac
+done
 
 # If the /tmp/src is empty, then print usage and exit.
 (dir_is_empty /tmp/src) && print_usage_and_exit
