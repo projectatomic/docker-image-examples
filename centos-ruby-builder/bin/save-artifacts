@@ -1,7 +1,9 @@
 #!/bin/bash
-
-cd $HOME
-
+#
+# Create the archive with files/folders you would like to
+# preserve for the next build. Then the archive is streamed into
+# STDOUT.
+#
 # List the files and directories you would like to archive.
 #
-exec tar -czf - {bundle,gems}
+cd $HOME && exec tar -czf - {bundle,gems}

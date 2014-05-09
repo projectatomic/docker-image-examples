@@ -1,5 +1,9 @@
 #!/bin/bash
 
-cd $HOME
-
-exec tar -xzf -
+# Reads the archive with artifacts from STDIN and extract it
+# into the $HOME (/opt/ruby) folder.
+#
+# NOTE: Docker needs to be run with --interactive (-i) option to route
+#       the stdin properly.
+#
+cd $HOME && exec tar -xzf -
