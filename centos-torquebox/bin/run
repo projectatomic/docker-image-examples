@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export app_root_dir="${HOME}/src/${APP_ROOT:-.}"
+
+export RACK_ENV=${RACK_ENV:-"production"}
+export RAILS_ENV=${RAILS_ENV:-"${RACK_ENV}"}
+
+cd $app_root_dir
+
+torquebox deploy $app_root_dir --env=$RAILS_ENV
+
+exec torquebox run -b 0.0.0.0
+

@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+# Build the jruby application first
+#
+${HOME}/bin/prepare
+
+# Replace this script with the application runner at the end of the build.
+#
+echo "---> Build successful. Commit this image with: docker commit ${HOSTNAME} torquebox-ruby-app"
+cp -f ${HOME}/bin/run ${HOME}/bin/start && exit
