@@ -48,3 +48,6 @@ USER jbosseap
 
 # Expose ports
 EXPOSE 8080
+
+# Set default url for assemble/run/save-artifacts scripts
+ENV STI_SCRIPTS_URL https://raw.githubusercontent.com/projectatomic/docker-image-examples/master/rhel-jbosseap/.sti/bin
