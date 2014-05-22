@@ -31,3 +31,25 @@ function bundle_install() {
   BUNDLE_WITHOUT=${BUNDLE_WITHOUT:-"development:test"}
   ruby_context bundle install $@
 }
+
+function rake_assets_precompile() {
+  if is_rails_app && has_assets; then
+    echo
+    echo "---> Starting asset compilation."
+    /opt/ruby/bin/ruby_context bundle exec rake assets:precompile
+    echo
+  fi
+}
+
+function is_rails_app() {
+  [ ! -f Gemfile ] && return 1
+  [ ! -f Rakefile ] && return 1
+  ! grep " rails " Gemfile.lock >/dev/null && return 1
+  return 0
+}
+
+function has_assets(){
+  ! grep " execjs " Gemfile.lock >/dev/null && return 1
+  ! /opt/ruby/bin/ruby_context bundle exec "rake -T" | grep "assets:precompile" >/dev/null && return 1
+  return 0
+}
