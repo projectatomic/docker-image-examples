@@ -3,13 +3,27 @@
 source ${HOME}/etc/sdk
 source ${HOME}/etc/helpers
 
-# Allow users to inspect/debug the builder image itself, by using:
-# $ docker run -i -t openshift/centos-ruby-builder --debug
-#
-[ "$1" == "--debug" ] && exec /bin/bash
-
 # If the /tmp/src is empty, then print usage and exit.
 (dir_is_empty /tmp/src) && print_usage_and_exit
+
+# If the directory with sources contain '.sti' folder, then look for the
+# prepare/run/etc. scripts there and replace the 'base' image scripts.
+#
+(! dir_is_empty /tmp/src/.sti ) && copy_assemble_scripts
+
+while getopts “h:s:d” opt; do
+  case $opt in
+    h)
+      print_usage_and_exit
+      ;;
+    s)
+      download_assemble_scripts "${OPTARG}"
+      ;;
+    d)
+      exec /bin/bash
+      ;;
+  esac
+done
 
 # Detect the presence of $stdin and restore the artifacts
 # To restore the artifacts, you have to run the builder as:
@@ -21,12 +35,18 @@ if [ -p /dev/stdin ]; then
   cat | ${HOME}/bin/restore-artifacts
 fi
 
-# Build the ruby application first
+# Prepare the Ruby application source code which includes:
+#
+# * (optional) Restore artifacts (bundle/vendor) from the previous build
+# * Installing all rubygems dependencies using Bundler
+# * (optional) Complilation of the Rails assets (rake assets:precompile)
 #
 ${HOME}/bin/prepare
 
-# Replace this script with the application runner at the end of the build.
-#
 echo "---> Build successful. Commit this image with: 'docker commit ${HOSTNAME} ruby-app'"
 
+# Once the Ruby application sources are prepared, replace
+# this script with the 'run' script that launch the application
+# using Ruby application server (puma or rackup by default).
+#
 cp -f ${HOME}/bin/run ${HOME}/bin/start && exit

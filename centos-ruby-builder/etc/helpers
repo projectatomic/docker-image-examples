@@ -18,7 +18,45 @@ function print_usage_and_exit() {
   echo
   echo "Other options:"
   echo
-  echo "  --debug       Drop to the shell instead of build."
+  echo "  -s <URL>  Point builder to remote directory with assemble scripts"
+  echo "  -h        Print this usage"
+  echo "  -d        Drop to the shell instead of build."
   echo
   exit 0
+}
+
+# Functions to support downloading/replacing the base image scripts.
+# Users could override them by:
+#
+# 1) Adding them into GIT_SOURCE/.sti/ folder
+# 1) Using '-s URL' on the builder command line
+
+function download_script() {
+  local url="$1"
+  local script_name="$2"
+  if ! curl --silent -L "${url}/${script_name}" > ${HOME}/bin/${script_name}; then
+    echo "Warning: Unable to download '${url}/${script_name}' ($?)"
+  fi
+}
+
+function copy_script() {
+  local $script_name="$1"
+  [ ! -f "/tmp/src/.sti/${script_name}"] && return
+  cp -f "/tmp/src/.sti/${script_name}" "${HOME}/bin/${script_name}" && \
+    chmod +x "${HOME}/bin/${script_name}"
+}
+
+function download_assemble_scripts() {
+  # FIXME: Rename 'prepare' to 'assemble' at some point.
+  download_script "$1" "prepare"
+  download_script "$1" "save-artifacts"
+  download_script "$1" "restore-artifacts"
+  download_script "$1" "run"
+}
+
+function copy_assemble_scripts() {
+  copy_script 'prepare'
+  copy_script 'save-artifacts'
+  copy_script 'restore-artifacts'
+  copy_script 'run'
 }
