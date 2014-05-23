@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+app_runtime_dir="${HOME}/src"
+app_src_dir="/tmp/src"
+
+echo "---> Installing application source"
+cp -Rf ${app_src_dir}/* ${app_runtime_dir}/
+
+pushd "$app_runtime_dir/${APP_ROOT}" >/dev/null
+echo "---> Building your Ruby application from source"
+
+if [ -f Gemfile ]; then
+  echo "---> Installing dependencies using Bundler"
+
+  jruby -S bundle install
+
+fi
+
+# TODO: Add `rake assets:precompile` step here for Rails applications
+# TODO: Add `rake db:migrate` if linked with DB container
+
+popd >/dev/null
