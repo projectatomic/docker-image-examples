@@ -8,7 +8,6 @@ RUN git clone https://github.com/sstephenson/rbenv.git /opt/rbenv && cd /opt/rbe
 
 ADD ./prepare /usr/bin/
 ADD ./run /usr/bin/
-ADD ./save-artifacts /usr/bin/
 ADD ./ruby_context /usr/bin/
 
 EXPOSE 9292
