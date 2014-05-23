@@ -8,7 +8,7 @@ FROM centos
 MAINTAINER Ben Parees <bparees@redhat.com>
 
 RUN yum -y update && \
-    yum -y install tar java-1.7.0-openjdk java-1.7.0-openjdk-devel unzip which bc vim vi && \
+    yum -y install tar java-1.7.0-openjdk java-1.7.0-openjdk-devel unzip which bc vi&& \
     yum clean all
 
 # Install maven
@@ -23,27 +23,14 @@ RUN tar -xf wildfly-8.1.0.CR1.tar.gz && \
     rm wildfly-8.1.0.CR1.tar.gz && \
     mv wildfly-8.1.0.CR1 wildfly && \
     /wildfly/bin/add-user.sh admin passw0rd_  --silent
+
+# Add mysql and postgres jbdbc driver modules
 ADD ./wfmodules/ /wildfly/modules/    
 
-# Configure Source-To-Image scripts
-ADD ./bin /usr/bin/
-RUN chmod a+rx /usr/bin/{prepare,run,save-artifacts}
-
-# Add geard/sti wildfly customizations
+# Add wildfly customizations
 ADD ./wfbin/standalone.conf /wildfly/bin/standalone.conf
 ADD ./wfcfg/standalone.xml /wildfly/standalone/configuration/standalone.xml
-
-# Add sample jee application
-# This app will be built/run if no other source is bind-mounted to mask it.
-ADD https://github.com/bparees/openshift-jee-sample/archive/master.tar.gz master.tar.gz
-RUN mkdir /tmp/src && \
-    tar -C /tmp/src --strip-components=1 -zxf master.tar.gz && \
-    rm master.tar.gz
-    
-# Configure source location
-RUN mkdir -p /opt/wildfly/source
-WORKDIR /opt/wildfly/source
-
+   
 # Create wildfly group and user, set file ownership to that user.
 RUN groupadd -r wildfly -g 433 && \
     useradd -u 431 -r -g wildfly -d /opt/wildfly -s /sbin/nologin -c "Wildfly user" wildfly && \
@@ -53,4 +40,4 @@ RUN groupadd -r wildfly -g 433 && \
 
 USER wildfly
 EXPOSE 7600 8080 9990 9999
-CMD /usr/bin/usage
+CMD /wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0

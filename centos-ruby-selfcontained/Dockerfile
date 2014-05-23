@@ -1,6 +1,19 @@
-# centos-ruby
+# Self-contained Ruby builder image.
 #
-# This image provide a base for running Ruby based applications. It provides
+# You can use this image to produce an application image providing the source
+# code:
+#
+# $ docker run -v $(pwd):/tmp/src openshift/centos-ruby-selfcontained
+# <your application is being build>
+#
+# $ docker commit <id> your_application
+#
+# Then you can start your application using:
+#
+# $ docker run -p :9292 your_application
+#
+#
+# This image provides a base for running Ruby based applications. It provides
 # just base Ruby installation using SCL and Ruby application server.
 #
 # If you want to use Bundler with C-extensioned gems or MySQL/PostGresql, you
@@ -12,7 +25,7 @@ MAINTAINER Michal Fojtik <mfojtik@redhat.com>
 
 # Pull in important updates and then install ruby193 SCL
 #
-RUN yum update --assumeyes && \
+RUN yum update --assumeyes --skip-broken && \
       yum install --assumeyes centos-release-SCL gettext tar which && \
       yum install --assumeyes ruby193 ruby193-ruby-devel \
       gcc-c++ automake autoconf curl-devel openssl-devel \
@@ -34,8 +47,7 @@ ADD ./etc /opt/ruby/etc/
 #        maintain backward compatibility
 #
 RUN cp -f /opt/ruby/bin/prepare /usr/bin/prepare && \
-    cp -f /opt/ruby/bin/run /usr/bin/run && \
-    cp -f /opt/ruby/bin/save-artifacts /usr/bin/save-artifacts
+    cp -f /opt/ruby/bin/run /usr/bin/run
 
 RUN chown -R ruby:ruby /opt/ruby
 
@@ -52,13 +64,11 @@ ENV APP_ROOT .
 ENV HOME     /opt/ruby
 ENV PATH     $HOME/bin:$PATH
 
-# FIXME: This might be a potential bug in STI where if we keep the USER
-# instruction here, the resulting application image will fail to run.
+# The initial 'start' command will trigger an application build when it runs in
+# 'self-contained' builder context. After application is built, then this
+# command is replaced in final application image by the 'run' command.
 #
-# USER ruby
+RUN chown -R ruby:ruby /opt/ruby/bin
 
-EXPOSE 9292
-
-# Display STI usage when invoked outside STI builder
-#
-CMD ["/opt/ruby/bin/usage"]
+USER ruby
+ENTRYPOINT ["/opt/ruby/bin/start"]
