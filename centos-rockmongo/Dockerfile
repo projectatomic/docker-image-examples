@@ -3,7 +3,7 @@ FROM centos
 MAINTAINER Derek Carr <decarr@redhat.com>
 
 # update, install required, clean
-RUN yum -y update && yum install -y httpd php php-devel wget php-pear unzip gcc-c++ && yum clean all
+RUN yum -y update && yum install -y httpd php php-devel wget php-pear unzip gcc-c++ make && yum clean all
 
 # update pecl channels
 RUN pecl update-channels
