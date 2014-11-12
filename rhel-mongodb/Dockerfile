@@ -1,4 +1,4 @@
-FROM rhel7
+FROM rhel6
 MAINTAINER scollier <scollier@redhat.com>
 
 # Add repo files
